@@ -12,6 +12,7 @@ import java.util.Map;
 
 import db.DB;
 import db.DbException;
+import db.DbIntegrityException;
 import model.dao.SellerDao;
 import model.entity.Department;
 import model.entity.Seller;
@@ -82,17 +83,7 @@ public class SellerDaoJDBC implements SellerDao {
 			st.setInt(6, obj.getId());
 			
 			int rowsAffected = st.executeUpdate();
-			if(rowsAffected > 0) {
-				ResultSet rs = st.getGeneratedKeys();
-				if(rs.next()) {
-					int id = rs.getInt(1);
-					obj.setId(id);
-				}
-				DB.closeResultSet(rs);
-			}
-			else {
-				throw new DbException("Unexpected error! No rows affected!");
-			}
+			System.out.println("Done! Rows affected: " + rowsAffected);
 		}
 		catch(SQLException e) {
 			throw new DbException(e.getMessage());
@@ -105,7 +96,22 @@ public class SellerDaoJDBC implements SellerDao {
 
 	@Override
 	public void deleteById(Integer id) {
-		// TODO Auto-generated method stub
+		PreparedStatement st = null;
+		try {
+			st = conn.prepareStatement(
+					"DELETE FROM seller "
+					+"WHERE Id = ?");
+			st.setInt(1, id);
+			
+			int rowsAffected = st.executeUpdate();
+			System.out.println("Done! Rows affected: " + rowsAffected);
+		}
+		catch(SQLException e) {
+			throw new DbException(e.getMessage());
+		}
+		finally {
+			DB.closeStatement(st);
+		}
 		
 	}
 
