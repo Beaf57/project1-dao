@@ -12,7 +12,6 @@ import java.util.Map;
 
 import db.DB;
 import db.DbException;
-import db.DbIntegrityException;
 import model.dao.SellerDao;
 import model.entity.Department;
 import model.entity.Seller;
